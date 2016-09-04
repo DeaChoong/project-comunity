@@ -17,68 +17,66 @@ public class Character : MonoBehaviour {
 	IEnumerator UpdateCharacter() {
 		while (true) {
 			Vector3 pos = gameObject.transform.position;
-			Debug.Log (y + ", " + pos.y);
-			y -= 0.028f;
-			if (Input.GetKey (KeyCode.RightArrow)) {
-				pos.x -= x;
-				if (x <= -0.4f) {
-					x = -0.42f;
-				}
-				x -= 0.06f;
-			}
-
-			if (Input.GetKeyUp (KeyCode.RightArrow)) {
-				x = 0.0f;
-			}
-
-			if (Input.GetKey (KeyCode.LeftArrow)) {
-				pos.x += x;
-				if (x <= -0.4f) {
-					x = -0.42f;
-				}
-				x -= 0.06f;
-			}
-
-			if (Input.GetKeyUp (KeyCode.LeftArrow)) {
-				x = 0.0f;
-			}
-
-			if (Input.GetKeyDown (KeyCode.Space)) {
-				JumpJudgement = true;
-			}
-
-			if (Input.GetKeyDown (KeyCode.Space)) {
-				JumpJudgement = true;
-			}
-
-			if (!JumpJudgement) {
-				JumpPower = 0.9f;
-				Accel = 0.1f;
-			} else {
-				if (JumpPower <= 0.0f) {
-					Accel = 0.0f;
-					JumpPower = 0.0f;
-				} else {
-					JumpPower -= Accel;
-					pos.y += JumpPower;
-					y = 0;
-					GravityJudgement = false;
-				}
-			}
-
-			if (!GravityJudgement) {
-				pos.y += y;
-			} else {
-				JumpJudgement = false;
-				pos.y = -2.5f;
-			}
-			gameObject.transform.position = pos;
+			Move (ref pos);
+			Jump (ref pos);
 			yield return null;
 		}
 	}
 
-	void Jump() {
+	void Move(ref Vector3 pos) {
+		if (Input.GetKey (KeyCode.RightArrow)) {
+			pos.x -= x;
+			if (x <= -0.4f) {
+				x = -0.42f;
+			}
+			x -= 0.06f;
+		}
+		
+		if (Input.GetKeyUp (KeyCode.RightArrow)) {
+			x = 0.0f;
+		}
+		
+		if (Input.GetKey (KeyCode.LeftArrow)) {
+			pos.x += x;
+			if (x <= -0.4f) {
+				x = -0.42f;
+			}
+			x -= 0.06f;
+		}
+		
+		if (Input.GetKeyUp (KeyCode.LeftArrow)) {
+			x = 0.0f;
+		}
+	}
 
+	void Jump(ref Vector3 pos) {
+		y -= 0.028f;
+		if (Input.GetKey (KeyCode.Space)) {
+			JumpJudgement = true;
+		}
+		
+		if (!JumpJudgement) {
+			JumpPower = 0.9f;
+			Accel = 0.1f;
+		} else {
+			if (JumpPower <= 0.0f) {
+				Accel = 0.0f;
+				JumpPower = 0.0f;
+			} else {
+				JumpPower -= Accel;
+				pos.y += JumpPower;
+				y = 0;
+				GravityJudgement = false;
+			}
+		}
+		
+		if (!GravityJudgement) {
+			pos.y += y;
+		} else {
+			JumpJudgement = false;
+			pos.y = -2.5f;
+		}
+		gameObject.transform.position = pos;
 	}
 
 	void OnTriggerEnter(Collider other) {
