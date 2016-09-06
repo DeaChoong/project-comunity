@@ -6,9 +6,10 @@ public class Character : MonoBehaviour {
 	float y = 0.0f;
 	float x = 0.0f;
 	float JumpPower;
+	float Accel;
 	bool GravityJudgement = false;
 	bool JumpJudgement = false;
-	float Accel;
+	bool Judgement = false;
 
 	void Start () {
 		StartCoroutine ("UpdateCharacter");
@@ -51,10 +52,11 @@ public class Character : MonoBehaviour {
 
 	void Jump(ref Vector3 pos) {
 		y -= 0.028f;
+		Debug.Log (Judgement);
 		if (Input.GetKey (KeyCode.Space)) {
 			JumpJudgement = true;
 		}
-		
+
 		if (!JumpJudgement) {
 			JumpPower = 0.9f;
 			Accel = 0.1f;
@@ -63,6 +65,9 @@ public class Character : MonoBehaviour {
 				Accel = 0.0f;
 				JumpPower = 0.0f;
 			} else {
+				if (Input.GetKey (KeyCode.Space) && JumpPower <= 0.2f) {
+					JumpJudgement = false;
+				}
 				JumpPower -= Accel;
 				pos.y += JumpPower;
 				y = 0;
@@ -71,9 +76,13 @@ public class Character : MonoBehaviour {
 		}
 		
 		if (!GravityJudgement) {
+			if (Input.GetKey (KeyCode.Space) && JumpPower <= 0.2f) {
+				JumpJudgement = false;
+			}
 			pos.y += y;
 		} else {
 			JumpJudgement = false;
+			Judgement = false;
 			pos.y = -2.5f;
 		}
 		gameObject.transform.position = pos;
