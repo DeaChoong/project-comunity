@@ -52,7 +52,6 @@ public class Character : MonoBehaviour {
 
 	void Jump(ref Vector3 pos) {
 		y -= 0.028f;
-		Debug.Log (Judgement);
 		if (Input.GetKey (KeyCode.Space)) {
 			JumpJudgement = true;
 		}
@@ -65,8 +64,9 @@ public class Character : MonoBehaviour {
 				Accel = 0.0f;
 				JumpPower = 0.0f;
 			} else {
-				if (Input.GetKey (KeyCode.Space) && JumpPower <= 0.2f) {
+				if (Input.GetKey (KeyCode.Space) && !Judgement) {
 					JumpJudgement = false;
+					Judgement = true;
 				}
 				JumpPower -= Accel;
 				pos.y += JumpPower;
@@ -76,8 +76,9 @@ public class Character : MonoBehaviour {
 		}
 		
 		if (!GravityJudgement) {
-			if (Input.GetKey (KeyCode.Space) && JumpPower <= 0.2f) {
+			if (Input.GetKey (KeyCode.Space) && !Judgement) {
 				JumpJudgement = false;
+				Judgement = true;
 			}
 			pos.y += y;
 		} else {
@@ -98,6 +99,7 @@ public class Character : MonoBehaviour {
 		if (other.gameObject.name == "Ground") {
 			y = 0;
 			GravityJudgement = false;
+			Judgement = false;
 		}
 	}
 }
